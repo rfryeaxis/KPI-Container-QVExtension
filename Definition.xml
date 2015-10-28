@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<ExtensionObject Label="KPI Container"> 
+	<Dimension Label="Metric Name" Initial="Metric Name" />
+	
+	<Measurement Label="Dynamic Dot Config" Initial=""/>
+    <Initiate Name="Caption.Text" value="KPI Container" /> 
+</ExtensionObject>
