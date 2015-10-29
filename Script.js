@@ -10,6 +10,9 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 			this.Element.innerHTML="";
 			var html = "";
 			
+			var tableHeaders = ["Metric Name","Responsible Party","Overall Score","Trend Last 12 Months","Dynamic Dot","Synthesis"];
+			//var tableFormatting = [""];
+			
 			_this.Data.SetPagesizeY(_this.Data.TotalSize.y);
 			_this.Data.SetPagesizeX(_this.Data.TotalSize.x);			
 /*
@@ -19,8 +22,18 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 			html += '</tr>';
 			html += '</table>';
 */
+
 			//Populate HTML table
-			html = '<table style = "width:100%">';
+			html = '<table style = "width:100%" border = "1">';
+			
+			//add headers
+			html += '<tr>';
+			for (var col = 0; col < tableHeaders.length; col++)
+			{
+				html += '<th>' + tableHeaders[col] + '</th>';
+			}
+			html += '</tr>';
+			
 			//loop through rows
 			for (var row = 0; row < _this.Data.TotalSize.y; row++)
 			{
@@ -28,14 +41,88 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 				//Loop through columns
 				for (var col = 0; col < _this.Data.TotalSize.x; col++) 
 				{
-					html += '<td';
-					
-					//assign id
 					switch(col)
 					{
+						//Metric Name
+						case 0:
+						{
+							html += '<td';
+							html += ' class = "tableColumns"';
+							html += '>';
+							html += _this.Data.Rows[row][col].text;
+							
+							html += '</td>';
+							break;
+						}
+						//Responsible Party
 						case 1:
 						{
+							html += '<td';
+							html += '>';
+							html += _this.Data.Rows[row][col].text;
+							
+							html += '</td>';
+							break;
+						}
+						//Responsible Party Image
+						case 2:
+						{
+							//html += '<td';
+							//html += '>';
+							//html += _this.Data.Rows[row][col].text;
+							
+							//html += '</td>';
+							break;
+						}
+						//Overall Score
+						case 3:
+						{
+							html += '<td';
+							html += ' class = "tableColumns"';
+							html += ' id="overallscore_'+row+'"';
+							html += '>';
+							//html += _this.Data.Rows[row][col].text;
+							
+							html += '</td>';
+							break;
+						}
+						//Trend Change
+						case 4:
+						{
+							//html += '<td';
+							//html += '>';
+							//html += _this.Data.Rows[row][col].text;
+							
+							//html += '</td>';
+							break;
+						}
+						//Trend
+						case 5:
+						{
+							html += '<td';
+							html += '>';
+							html += _this.Data.Rows[row][col].text;
+							
+							html += '</td>';
+							break;
+						}
+						//Dynamic Dot Config
+						case 6:
+						{
+							html += '<td';
 							html += ' id = "aster_'+row+'"';
+							html += '>';
+							html += '</td>';
+							break;
+						}
+						//Synthesis
+						case 7:
+						{
+							html += '<td';
+							html += '>';
+							html += _this.Data.Rows[row][col].text;
+							
+							html += '</td>';
 							break;
 						}
 						default:
@@ -43,24 +130,6 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 							break;
 						}
 					}
-					
-					html += '>';
-					
-					//assign values
-					switch(col)
-					{
-						case 0:
-						{
-							html += _this.Data.Rows[row][col].text;
-							break;
-						}
-						default:
-						{
-							break;
-						}
-					}					
-
-					html += '</td>';
 				}
 				html += '</tr>';
 			}
@@ -72,16 +141,76 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 
 			for (var row = 0; row < _this.Data.TotalSize.y; row++)
 			{
-				
-				var asterData = _this.Data.Rows[row][1].text.split(",");
-				
+				//draw aster plots
+				var asterData = _this.Data.Rows[row][6].text.split(",");
+
 				for(var asterRow = 0; asterRow < asterData.length; asterRow++)
 				{
 					asterData[asterRow] = asterData[asterRow].split("/");
 				}
-							
+				
 				drawAsterPlot("aster_"+row,asterData);	
-			}				
+				
+				//draw overall score dots
+				var scoreData = _this.Data.Rows[row][3].text.split("/");
+				drawOverallScore("overallscore_"+row,scoreData[0],scoreData[1]);
+			}
+			
+			function drawOverallScore(divID,value,total)
+			{
+				var width = 50;//_this.GetWidth();// - margin.left - margin.right;//960 - margin.left - margin.right,
+				var height = 50;//_this.GetHeight();// - margin.top - margin.bottom;//500 - margin.top - margin.bottom;
+				
+				var svg = d3.select(document.getElementById(divID)).append("svg")
+					.attr("width",width)
+					.attr("height",height);
+				
+				var lastFilledDot;
+				
+				var color;
+				
+				if(value <= 3)
+				{
+					color = "#CC3300";
+				}
+				else
+				{
+					if(value <=7)
+					{
+						color = "#FFFF00";
+					}
+					else
+					{
+						color = "#99FF66";
+					}
+				}
+				
+				for(var i = 0; i < value; i ++)
+				{
+					var cx = 5 + i*11;
+					var circle = svg.append("circle")
+						.attr("cx",cx)
+						.attr("cy",height/2)
+						.attr("r",5)
+						.attr("fill",color)
+						.attr("stroke","black")
+						
+					lastFilledDot = i;
+				}
+				
+				
+				for(var i = lastFilledDot+1; i < total; i ++)
+				{
+					var cx = 5 + i*11;
+					var circle = svg.append("circle")
+						.attr("cx",cx)
+						.attr("cy",height/2)
+						.attr("r",5)
+						.attr("fill","none")
+						.attr("stroke","black")
+						;
+				}
+			}
 			
 			function drawAsterPlot(divID,data)
 			{

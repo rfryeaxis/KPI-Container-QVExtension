@@ -2,6 +2,12 @@
 <ExtensionObject Label="KPI Container"> 
 	<Dimension Label="Metric Name" Initial="Metric Name" />
 	
+	<Measurement Label="Responsible Party" Initial=""/>
+	<Measurement Label="Responsible Party Image" Initial=""/>
+	<Measurement Label="Overall Score" Initial=""/>
+	<Measurement Label="Trend Change" Initial=""/>
+	<Measurement Label="Trend" Initial=""/>
 	<Measurement Label="Dynamic Dot Config" Initial=""/>
+	<Measurement Label="Synthesis" Initial=""/>
     <Initiate Name="Caption.Text" value="KPI Container" /> 
 </ExtensionObject>
