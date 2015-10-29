@@ -11,7 +11,7 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 			var html = "";
 			
 			var tableHeaders = ["Metric Name","Responsible Party","Overall Score","Trend Last 12 Months","Dynamic Dot","Synthesis"];
-			//var tableFormatting = [""];
+			var tableFormatting = ["metricname","responsibleparty","overallscore","trend","dynamicdot","synthesis"];
 			
 			_this.Data.SetPagesizeY(_this.Data.TotalSize.y);
 			_this.Data.SetPagesizeX(_this.Data.TotalSize.x);			
@@ -27,17 +27,20 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 			html = '<table style = "width:100%" border = "1">';
 			
 			//add headers
-			html += '<tr>';
+			html += '<tr class = "header">';
 			for (var col = 0; col < tableHeaders.length; col++)
 			{
-				html += '<th>' + tableHeaders[col] + '</th>';
+				html += '<th'
+				//html += '<div ';
+				html += ' class = "' + tableFormatting[col] + '"';
+				html += '>' + tableHeaders[col] + '</th>';
 			}
 			html += '</tr>';
 			
 			//loop through rows
 			for (var row = 0; row < _this.Data.TotalSize.y; row++)
 			{
-				html += '<tr>';
+				html += '<tr class = "row">';
 				//Loop through columns
 				for (var col = 0; col < _this.Data.TotalSize.x; col++) 
 				{
@@ -47,10 +50,9 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 						case 0:
 						{
 							html += '<td';
-							html += ' class = "tableColumns"';
+							html += ' class = "table_metricname"';
 							html += '>';
 							html += _this.Data.Rows[row][col].text;
-							
 							html += '</td>';
 							break;
 						}
@@ -78,10 +80,9 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 						case 3:
 						{
 							html += '<td';
-							html += ' class = "tableColumns"';
 							html += ' id="overallscore_'+row+'"';
 							html += '>';
-							//html += _this.Data.Rows[row][col].text;
+							html += _this.Data.Rows[row][col].text.split("/")[0];
 							
 							html += '</td>';
 							break;
@@ -100,18 +101,27 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 						case 5:
 						{
 							html += '<td';
+							html += ' id = "trend_' + row + '"';
 							html += '>';
-							html += _this.Data.Rows[row][col].text;
+							//html += _this.Data.Rows[row][col].text;
 							
 							html += '</td>';
 							break;
 						}
 						//Dynamic Dot Config
 						case 6:
-						{
+						{/*
 							html += '<td';
 							html += ' id = "aster_'+row+'"';
+							html += ' class = "table_dynamicdot"';
 							html += '>';
+							html += '</td>';
+							break;
+						}*/
+							html += '<td>';
+							html += '<div id = "aster_'+row+'"';
+							html += ' class = "table_dynamicdot">';
+							html += '</div>';
 							html += '</td>';
 							break;
 						}
@@ -149,22 +159,90 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 					asterData[asterRow] = asterData[asterRow].split("/");
 				}
 				
-				drawAsterPlot("aster_"+row,asterData);	
+				drawAsterPlot(_this,"aster_"+row,asterData);	
 				
 				//draw overall score dots
 				var scoreData = _this.Data.Rows[row][3].text.split("/");
-				drawOverallScore("overallscore_"+row,scoreData[0],scoreData[1]);
+				drawOverallScore(_this,"overallscore_"+row,scoreData[0],scoreData[1]);
+				
+				//draw line chart
+				var lineData = _this.Data.Rows[row][5].text.split(",");
+				drawLineChart(_this,"trend_"+row,lineData);
+			}
+						
+			function drawLineChart(_this,divID,data)
+			{
+				//https://gist.github.com/benjchristensen/2579599				
+				// define dimensions of graph
+				var m = [80, 80, 80, 80]; // margins
+				
+				var w = _this.GetWidth()*.15;//100;//1000 - m[1] - m[3]; // width
+				var h = _this.GetHeight() * .1;//400 - m[0] - m[2]; // height
+				
+				// create a simple data array that we'll plot with a line (this array represents only the Y values, X will just be the index location)
+				//var data = [3, 6, 2, 7, 5, 2, 0, 3, 8, 9, 2, 5, 9, 3, 6, 3, 6, 2, 7, 5, 2, 1, 3, 8, 9, 2, 5, 9, 2, 7];
+				// X scale will fit all values from data[] within pixels 0-w
+				var x = d3.scale.linear().domain([0, data.length]).range([0, w]);
+				// Y scale will fit values from 0-10 within pixels h-0 (Note the inverted domain for the y-scale: bigger is up!)
+				var y = d3.scale.linear().nice().domain([0, Math.max.apply(Math, data)]).range([h, 0]);
+				// automatically determining max range can work something like this
+				// var y = d3.scale.linear().domain([0, d3.max(data)]).range([h, 0]);
+				// create a line function that can convert data[] into x and y points
+				var line = d3.svg.line()
+				// assign the X function to plot our line as we wish
+				.x(function(d,i) { 
+					// verbose logging to show what's actually being done
+					//('Plotting X value for data point: ' + d + ' using index: ' + i + ' to be at: ' + x(i) + ' using our xScale.');
+					// return the X coordinate where we want to plot this datapoint
+					return x(i); 
+				})
+				.y(function(d) { 
+					// verbose logging to show what's actually being done
+					//alert('Plotting Y value for data point: ' + d + ' to be at: ' + y(d) + " using our yScale.");
+					// return the Y coordinate where we want to plot this datapoint
+					return y(d); 
+				})
+				// Add an SVG element with the desired dimensions and margin.
+				var graph = d3.select(document.getElementById(divID)).append("svg:svg")
+						.attr("width", w)
+						.attr("height", h)
+					.append("svg:g")
+						//.attr("transform", "translate(" + w/2 + "," + h/2 + ")")
+				;
+				// create yAxis
+				//var xAxis = d3.svg.axis().scale(x).tickSize(-h).tickSubdivide(true);
+				// Add the x-axis.
+				/*graph.append("svg:g")
+					  .attr("class", "x axis")
+					  .attr("transform", "translate(0," + h + ")")
+					  .call(xAxis);*/
+				// create left yAxis
+				//var yAxisLeft = d3.svg.axis().scale(y).ticks(4).orient("left");
+				// Add the y-axis to the left
+				/*graph.append("svg:g")
+					  .attr("class", "y axis")
+					  .attr("transform", "translate(-25,0)")
+					  .call(yAxisLeft)
+				;*/
+				
+				// Add the line by appending an svg:path element with the data line we created above
+				// do this AFTER the axes above so that the line is above the tick-lines
+				graph.append("svg:path").attr("d", line(data))
+					.attr("fill","none")
+					.attr("stroke","black")
+				;
 			}
 			
-			function drawOverallScore(divID,value,total)
+			function drawOverallScore(_this,divID,value,total)
 			{
-				var width = 50;//_this.GetWidth();// - margin.left - margin.right;//960 - margin.left - margin.right,
-				var height = 50;//_this.GetHeight();// - margin.top - margin.bottom;//500 - margin.top - margin.bottom;
+				//alert(document.getElementById(divID).style.width);
+				var width = _this.GetWidth * .15;//_this.GetWidth();// - margin.left - margin.right;//960 - margin.left - margin.right,
+				var height = 10;//_this.GetHeight();// - margin.top - margin.bottom;//500 - margin.top - margin.bottom;
 				
 				var svg = d3.select(document.getElementById(divID)).append("svg")
 					.attr("width",width)
 					.attr("height",height);
-				
+					
 				var lastFilledDot;
 				
 				var color;
@@ -198,7 +276,6 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 					lastFilledDot = i;
 				}
 				
-				
 				for(var i = lastFilledDot+1; i < total; i ++)
 				{
 					var cx = 5 + i*11;
@@ -212,9 +289,8 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 				}
 			}
 			
-			function drawAsterPlot(divID,data)
+			function drawAsterPlot(_this,divID,data)
 			{
-				//var labels = ["Dimension","Metric Name","AngleWeight","Radius","FillColor","ReferenceLine1","ReferenceLine2","Dynamic Dot Config"];
 				var labels = ["Dimension","AngleWeight","Radius","FillColor","ReferenceLine1","ReferenceLine2"];
 				var sliceStart = 0;
 				
@@ -258,8 +334,8 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 				/*END build_json_table*/	
 				/*BEGIN LOAD CHART*/
 				var margin = {top: 10, right: 30, bottom: 10, left: 30};
-				var width = 50;//_this.GetWidth();// - margin.left - margin.right;//960 - margin.left - margin.right,
-				var height = 50;//_this.GetHeight();// - margin.top - margin.bottom;//500 - margin.top - margin.bottom;
+				var width = _this.GetWidth() * .1;//_this.GetWidth();// - margin.left - margin.right;//960 - margin.left - margin.right,
+				var height = _this.GetHeight() * .2;//_this.GetHeight();// - margin.top - margin.bottom;//500 - margin.top - margin.bottom;
 				var radius = Math.min(width,height)/2
 				var innerRadius = 0;
 			

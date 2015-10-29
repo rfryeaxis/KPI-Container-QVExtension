@@ -1,3 +1,10 @@
+.tableColumns
+{
+	margin-left:auto;
+	margin-right:auto;
+	
+}
+
 body{
 	font:10px sans-serif
 }
@@ -65,4 +72,83 @@ body{
 	margin: -1px 0 0 0;
 	top: 100%;
 	left: 0;
+}
+
+line.path.line {
+  fill: none;
+  stroke: #666;
+  stroke-width: 1.5px;
+}
+
+line.path.area {
+  fill: #e7e7e7;
+}
+
+.line.axis {
+  shape-rendering: crispEdges;
+}
+
+.line.x.axis line {
+  stroke: #fff;
+}
+
+.line.x.axis .minor {
+  stroke-opacity: .5;
+}
+
+.line.x.axis path {
+  display: none;
+}
+
+.line.y.axis line, .line.y.axis path {
+  fill: none;
+  stroke: #000;
+}
+
+.metricname
+{
+	text-align: left;
+	width: 5%;
+
+}
+.responsibleparty
+{
+	text-align: left;
+	width: 5%;
+}
+.overallscore
+{
+	text-align: left;
+	width:10%;
+}
+
+.trend
+{
+	text-align: left;
+	width:10%;
+}
+
+.dynamicdot
+{
+	text-align: center;
+	width:5%;
+}
+
+.synthesis
+{
+	text-align: left;
+	width:10%;	
+}
+
+.header
+{
+	border-bottom: solid;
+	border-bottom-width: 1px;
+}
+
+.row
+{
+	border-bottom: solid;
+	border-bottom-width: 1px;
+	border-bottom-color: #D3D3D3;
 }
