@@ -11,8 +11,8 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 			var html = "";
 			var rowHeight = 50;
 			
-			var tableHeaders = ["Metric Name","Responsible Party","Overall Score","Trend Last 12 Months","Dynamic Dot","Synthesis"];
-			var tableFormatting = ["metricname","responsibleparty","overallscore","trend","dynamicdot","synthesis"];
+			var tableHeaders = ["Metric Name","Responsible Party","Overall Score","","Trend Last 12 Months","Dynamic Dot","Synthesis"];
+			var tableFormatting = ["metricname","responsibleparty","overallscore","trendtext","trend","dynamicdot","synthesis"];
 			
 			_this.Data.SetPagesizeY(_this.Data.TotalSize.y);
 			_this.Data.SetPagesizeX(_this.Data.TotalSize.x);
@@ -48,6 +48,7 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 			//Create div
 			
 			//Populate HTML table
+			//html += '<table style = "width:100%;" border = "1";>';
 			html += '<table style = "width:100%;">';
 			
 			//add headers
@@ -113,11 +114,12 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 						//Trend Change
 						case 4:
 						{
-							//html += '<td';
-							//html += '>';
-							//html += _this.Data.Rows[row][col].text;
+							html += '<td';
+							html += ' align = "right"';
+							html += '>';
+							html += _this.Data.Rows[row][col].text.split('/')[0];
 							
-							//html += '</td>';
+							html += '</td>';
 							break;
 						}
 						//Trend
@@ -125,13 +127,9 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 						{
 							
 							html += '<td';
+							html += ' align = "left"';
 							html += ' id = "trend_' + row + '"';
 							html += '>';
-							//html += '<div';
-							//html += 'class = "trendtext"';
-							//html += 'style = "line-height: 50px;"';
-							//html += '>';
-							html += _this.Data.Rows[row][4].text;
 							html += '</div>';
 							
 							html += '</td>';
@@ -199,7 +197,7 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 			{
 				//https://gist.github.com/benjchristensen/2579599				
 				// define dimensions of graph
-				var m = [15, 5, 5, 5]; // margins
+				var m = [5, 5, 5, 5]; // margins
 				
 				var w = _this.GetWidth()*.2;//100;//1000 - m[1] - m[3]; // width
 				var h = rowHeight;//400 - m[0] - m[2]; // height

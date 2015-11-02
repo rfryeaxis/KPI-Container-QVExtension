@@ -125,13 +125,14 @@ line.path.area {
 
 .trend
 {
+	text-align: left;
 	width: 10%;
 }
 
 .trendtext
 {
-	width: 10%;
-	
+	width: 1%;
+	align:right;
 }
 
 .dynamicdot
