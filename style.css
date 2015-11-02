@@ -109,13 +109,14 @@ line.path.area {
 {
 	text-align: left;
 	width: 5%;
-
 }
+
 .responsibleparty
 {
 	text-align: left;
 	width: 5%;
 }
+
 .overallscore
 {
 	text-align: left;
@@ -124,8 +125,13 @@ line.path.area {
 
 .trend
 {
-	text-align: left;
-	width:10%;
+	width: 10%;
+}
+
+.trendtext
+{
+	width: 10%;
+	
 }
 
 .dynamicdot
@@ -137,7 +143,7 @@ line.path.area {
 .synthesis
 {
 	text-align: left;
-	width:10%;	
+	width:10%;
 }
 
 .header
@@ -151,4 +157,5 @@ line.path.area {
 	border-bottom: solid;
 	border-bottom-width: 1px;
 	border-bottom-color: #D3D3D3;
+	height: 10px;
 }

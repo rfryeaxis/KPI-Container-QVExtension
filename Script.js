@@ -9,29 +9,52 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 			_this = this;
 			this.Element.innerHTML="";
 			var html = "";
+			var rowHeight = 50;
 			
 			var tableHeaders = ["Metric Name","Responsible Party","Overall Score","Trend Last 12 Months","Dynamic Dot","Synthesis"];
 			var tableFormatting = ["metricname","responsibleparty","overallscore","trend","dynamicdot","synthesis"];
 			
 			_this.Data.SetPagesizeY(_this.Data.TotalSize.y);
-			_this.Data.SetPagesizeX(_this.Data.TotalSize.x);			
-/*
-			html = '<table style = "width:100%">';
-			html += '<td>Name</td>';
-			html += '<td><div id = "aster"></div></td>';
-			html += '</tr>';
-			html += '</table>';
-*/
+			_this.Data.SetPagesizeX(_this.Data.TotalSize.x);
+			
+			html = '<div style = ';
+			html += '"';
+			html += 'width:' + _this.GetWidth() + 'px;'
+			html += 'height:' + _this.GetHeight() + 'px;';
+			html += 'overflow: scroll;';
+			html += 'overflow-x: hidden';
+			html += '"';
+			html += '>';
+/*			
+			html += '<div style = ';
+			html += '"';
+			html += 'width:50px;';
+			html += 'height:1000px;';
+			html += 'border-style:solid;';
+			html += 'border-width:1px;';
+			html += '"';
+			html += '/>';
+			html += 'here is a bunch of text';
+			html += '<br><br><br><br>';
+			html += 'here is more text';
+			
+			html += '</div>';
+*/			
 
+//			alert(html);		
+//			_this.Element.innerHTML = html;
+			
+			
+			//Create div
+			
 			//Populate HTML table
-			html = '<table style = "width:100%" border = "1">';
+			html += '<table style = "width:100%;">';
 			
 			//add headers
 			html += '<tr class = "header">';
 			for (var col = 0; col < tableHeaders.length; col++)
 			{
 				html += '<th'
-				//html += '<div ';
 				html += ' class = "' + tableFormatting[col] + '"';
 				html += '>' + tableHeaders[col] + '</th>';
 			}
@@ -42,7 +65,7 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 			{
 				html += '<tr class = "row">';
 				//Loop through columns
-				for (var col = 0; col < _this.Data.TotalSize.x; col++) 
+				for (var col = 0; col < _this.Data.TotalSize.x; col++)
 				{
 					switch(col)
 					{
@@ -82,7 +105,7 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 							html += '<td';
 							html += ' id="overallscore_'+row+'"';
 							html += '>';
-							html += _this.Data.Rows[row][col].text.split("/")[0];
+							//html += _this.Data.Rows[row][col].text.split("/")[0];
 							
 							html += '</td>';
 							break;
@@ -100,24 +123,23 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 						//Trend
 						case 5:
 						{
+							
 							html += '<td';
 							html += ' id = "trend_' + row + '"';
 							html += '>';
-							//html += _this.Data.Rows[row][col].text;
+							//html += '<div';
+							//html += 'class = "trendtext"';
+							//html += 'style = "line-height: 50px;"';
+							//html += '>';
+							html += _this.Data.Rows[row][4].text;
+							html += '</div>';
 							
 							html += '</td>';
 							break;
 						}
 						//Dynamic Dot Config
 						case 6:
-						{/*
-							html += '<td';
-							html += ' id = "aster_'+row+'"';
-							html += ' class = "table_dynamicdot"';
-							html += '>';
-							html += '</td>';
-							break;
-						}*/
+						{
 							html += '<td>';
 							html += '<div id = "aster_'+row+'"';
 							html += ' class = "table_dynamicdot">';
@@ -144,6 +166,7 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 				html += '</tr>';
 			}
 			html += '</table>';
+			html += '</div>';
 
 			_this.Element.innerHTML = html;
 
@@ -169,15 +192,17 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 				var lineData = _this.Data.Rows[row][5].text.split(",");
 				drawLineChart(_this,"trend_"+row,lineData);
 			}
-						
+			
+			
+			
 			function drawLineChart(_this,divID,data)
 			{
 				//https://gist.github.com/benjchristensen/2579599				
 				// define dimensions of graph
-				var m = [80, 80, 80, 80]; // margins
+				var m = [15, 5, 5, 5]; // margins
 				
-				var w = _this.GetWidth()*.15;//100;//1000 - m[1] - m[3]; // width
-				var h = _this.GetHeight() * .1;//400 - m[0] - m[2]; // height
+				var w = _this.GetWidth()*.2;//100;//1000 - m[1] - m[3]; // width
+				var h = rowHeight;//400 - m[0] - m[2]; // height
 				
 				// create a simple data array that we'll plot with a line (this array represents only the Y values, X will just be the index location)
 				//var data = [3, 6, 2, 7, 5, 2, 0, 3, 8, 9, 2, 5, 9, 3, 6, 3, 6, 2, 7, 5, 2, 1, 3, 8, 9, 2, 5, 9, 2, 7];
@@ -207,7 +232,8 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 						.attr("width", w)
 						.attr("height", h)
 					.append("svg:g")
-						//.attr("transform", "translate(" + w/2 + "," + h/2 + ")")
+						//.attr("transform", "translate(" + m[0] + "," + h/2 + ")")
+						.attr("transform", "translate(" + m[0] + "," + m[1] + ")")
 				;
 				// create yAxis
 				//var xAxis = d3.svg.axis().scale(x).tickSize(-h).tickSubdivide(true);
@@ -229,7 +255,7 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 				// do this AFTER the axes above so that the line is above the tick-lines
 				graph.append("svg:path").attr("d", line(data))
 					.attr("fill","none")
-					.attr("stroke","black")
+					.attr("stroke","#D3D3D3")
 				;
 			}
 			
@@ -237,7 +263,7 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 			{
 				//alert(document.getElementById(divID).style.width);
 				var width = _this.GetWidth * .15;//_this.GetWidth();// - margin.left - margin.right;//960 - margin.left - margin.right,
-				var height = 10;//_this.GetHeight();// - margin.top - margin.bottom;//500 - margin.top - margin.bottom;
+				var height = rowHeight;//_this.GetHeight();// - margin.top - margin.bottom;//500 - margin.top - margin.bottom;
 				
 				var svg = d3.select(document.getElementById(divID)).append("svg")
 					.attr("width",width)
@@ -335,7 +361,7 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 				/*BEGIN LOAD CHART*/
 				var margin = {top: 10, right: 30, bottom: 10, left: 30};
 				var width = _this.GetWidth() * .1;//_this.GetWidth();// - margin.left - margin.right;//960 - margin.left - margin.right,
-				var height = _this.GetHeight() * .2;//_this.GetHeight();// - margin.top - margin.bottom;//500 - margin.top - margin.bottom;
+				var height = rowHeight;//_this.GetHeight() * .2;//_this.GetHeight();// - margin.top - margin.bottom;//500 - margin.top - margin.bottom;
 				var radius = Math.min(width,height)/2
 				var innerRadius = 0;
 			
