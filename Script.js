@@ -11,7 +11,7 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 			var html = "";
 			var rowHeight = 50;
 			
-			var tableHeaders = ["Metric Name","Image","Responsible Party","Overall Score","","Trend Last 12 Months","Dynamic Dot","Synthesis"];
+			var tableHeaders = ["Metric Name","","Responsible Party","Overall Score","","Trend Last 12 Months","Dynamic Dot","Synthesis"];
 			var tableFormatting = ["metricname","responsiblepartyimage","responsibleparty","overallscore","trendtext","trend","dynamicdot","synthesis"];
 			var imagePath = "/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Container/";
 			
@@ -20,15 +20,6 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 			
 			//_this.Element.innerHTML += '<img src="' + imagePath + 'jsmith.png"/>';
 
-
-			html = '<div style = ';
-			html += '"';
-			html += 'width:' + _this.GetWidth() + 'px;'
-			html += 'height:' + _this.GetHeight() + 'px;';
-			html += 'overflow: scroll;';
-			html += 'overflow-x: hidden';
-			html += '"';
-			html += '>';
 /*		
 			html += '<div style = ';
 			html += '"';
@@ -52,7 +43,7 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 			//Create div
 			
 			//Populate HTML table
-			html += '<table style = "width:100%;">';
+			html += '<table style = "width:98%;" id = "headerTable">';
 			//html += '<table style = "width:100%;">';
 			
 			//add headers
@@ -64,6 +55,21 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 				html += '>' + tableHeaders[col] + '</th>';
 			}
 			html += '</tr>';
+			html += '</table>';
+			
+			var tableHeight = _this.GetHeight() - 20;// - headerTable.style.offsetHeight;
+//			alert(tableHeight);
+		
+			html += '<div style = ';
+			html += '"';
+			html += 'width:' + _this.GetWidth() + 'px;'
+			html += 'height:' + tableHeight + 'px;';
+			html += 'overflow: scroll;';
+			html += 'overflow-x: hidden';
+			html += '"';
+			html += '>';
+	
+			html += '<table style = "width:100%;">';			
 			
 			//loop through rows
 			for (var row = 0; row < _this.Data.TotalSize.y; row++)
@@ -78,7 +84,7 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 						case 0:
 						{
 							html += '<td';
-							html += ' class = "table_metricname"';
+							html += ' class = "' + tableFormatting[col] + '"';
 							html += '>';
 							html += _this.Data.Rows[row][col].text;
 							html += '</td>';
@@ -88,7 +94,8 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 						//Responsible Party Image
 						case 1:
 						{
-							html += '<td class = "responsiblepartyimage"';
+							html += '<td';
+							html += ' class = "' + tableFormatting[col] + '"';
 							html += '>';
 							var image = imagePath + _this.Data.Rows[row][col].text;
 							html += '<img src="' + image + '"/>';
@@ -101,6 +108,7 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 						case 2:
 						{
 							html += '<td';
+							html += ' class = "' + tableFormatting[col] + '"';
 							html += '>';
 							html += _this.Data.Rows[row][col].text;
 							
@@ -111,6 +119,7 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 						case 3:
 						{
 							html += '<td';
+							html += ' class = "' + tableFormatting[col] + '"';
 							html += ' id="overallscore_'+row+'"';
 							html += '>';
 							//html += _this.Data.Rows[row][col].text.split("/")[0];
@@ -122,7 +131,8 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 						case 4:
 						{
 							html += '<td';
-							html += ' align = "right"';
+							html += ' class = "' + tableFormatting[col] + '"';
+							//html += ' align = "right"';
 							html += '>';
 							html += _this.Data.Rows[row][col].text;
 							
@@ -133,6 +143,7 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 						case 5:
 						{
 							html += '<td';
+							html += ' class = "' + tableFormatting[col] + '"';
 							html += ' align = "left"';
 							html += ' id = "trend_' + row + '"';
 							html += '>';
@@ -146,7 +157,9 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 						//Dynamic Dot Config
 						case 6:
 						{
-							html += '<td>';
+							html += '<td';
+							html += ' class = "' + tableFormatting[col] + '"';
+							html += '>';
 							html += '<div id = "aster_'+row+'"';
 							html += ' class = "table_dynamicdot">';
 							html += '</div>';
@@ -157,6 +170,7 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 						case 7:
 						{
 							html += '<td';
+							html += ' class = "' + tableFormatting[col] + '"';
 							html += '>';
 							html += _this.Data.Rows[row][col].text;
 							
