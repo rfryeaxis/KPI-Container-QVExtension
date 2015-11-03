@@ -11,12 +11,16 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 			var html = "";
 			var rowHeight = 50;
 			
-			var tableHeaders = ["Metric Name","Responsible Party","Overall Score","","Trend Last 12 Months","Dynamic Dot","Synthesis"];
-			var tableFormatting = ["metricname","responsibleparty","overallscore","trendtext","trend","dynamicdot","synthesis"];
+			var tableHeaders = ["Metric Name","Image","Responsible Party","Overall Score","","Trend Last 12 Months","Dynamic Dot","Synthesis"];
+			var tableFormatting = ["metricname","responsiblepartyimage","responsibleparty","overallscore","trendtext","trend","dynamicdot","synthesis"];
+			var imagePath = "/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Container/";
 			
 			_this.Data.SetPagesizeY(_this.Data.TotalSize.y);
 			_this.Data.SetPagesizeX(_this.Data.TotalSize.x);
 			
+			//_this.Element.innerHTML += '<img src="' + imagePath + 'jsmith.png"/>';
+
+
 			html = '<div style = ';
 			html += '"';
 			html += 'width:' + _this.GetWidth() + 'px;'
@@ -25,7 +29,7 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 			html += 'overflow-x: hidden';
 			html += '"';
 			html += '>';
-/*			
+/*		
 			html += '<div style = ';
 			html += '"';
 			html += 'width:50px;';
@@ -48,8 +52,8 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 			//Create div
 			
 			//Populate HTML table
-			//html += '<table style = "width:100%;" border = "1";>';
 			html += '<table style = "width:100%;">';
+			//html += '<table style = "width:100%;">';
 			
 			//add headers
 			html += '<tr class = "header">';
@@ -78,26 +82,29 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 							html += '>';
 							html += _this.Data.Rows[row][col].text;
 							html += '</td>';
+							
+							break;
+						}
+						//Responsible Party Image
+						case 1:
+						{
+							html += '<td class = "responsiblepartyimage"';
+							html += '>';
+							var image = imagePath + _this.Data.Rows[row][col].text;
+							html += '<img src="' + image + '"/>';
+							html += '</td>';
+							
+							//alert(imagePath + _this.Data.Rows[row][col].text);
 							break;
 						}
 						//Responsible Party
-						case 1:
+						case 2:
 						{
 							html += '<td';
 							html += '>';
 							html += _this.Data.Rows[row][col].text;
 							
 							html += '</td>';
-							break;
-						}
-						//Responsible Party Image
-						case 2:
-						{
-							//html += '<td';
-							//html += '>';
-							//html += _this.Data.Rows[row][col].text;
-							
-							//html += '</td>';
 							break;
 						}
 						//Overall Score
@@ -117,7 +124,7 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 							html += '<td';
 							html += ' align = "right"';
 							html += '>';
-							html += _this.Data.Rows[row][col].text.split('/')[0];
+							html += _this.Data.Rows[row][col].text;
 							
 							html += '</td>';
 							break;
@@ -125,11 +132,12 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 						//Trend
 						case 5:
 						{
-							
 							html += '<td';
 							html += ' align = "left"';
 							html += ' id = "trend_' + row + '"';
 							html += '>';
+							html += '<div>';
+							//html += _this.Data.Rows[row][col].text;
 							html += '</div>';
 							
 							html += '</td>';
@@ -169,7 +177,7 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 			_this.Element.innerHTML = html;
 
 			//alert(html);
-
+			
 			for (var row = 0; row < _this.Data.TotalSize.y; row++)
 			{
 				//draw aster plots
@@ -201,9 +209,9 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 				
 				var w = _this.GetWidth()*.2;//100;//1000 - m[1] - m[3]; // width
 				var h = rowHeight;//400 - m[0] - m[2]; // height
-				
+
 				// create a simple data array that we'll plot with a line (this array represents only the Y values, X will just be the index location)
-				//var data = [3, 6, 2, 7, 5, 2, 0, 3, 8, 9, 2, 5, 9, 3, 6, 3, 6, 2, 7, 5, 2, 1, 3, 8, 9, 2, 5, 9, 2, 7];
+				//data = [3, 6, 2, 7, 5, 2, 0, 3, 8, 9, 2, 5, 9, 3, 6, 3, 6, 2, 7, 5, 2, 1, 3, 8, 9, 2, 5, 9, 2, 7];
 				// X scale will fit all values from data[] within pixels 0-w
 				var x = d3.scale.linear().domain([0, data.length]).range([0, w]);
 				// Y scale will fit values from 0-10 within pixels h-0 (Note the inverted domain for the y-scale: bigger is up!)

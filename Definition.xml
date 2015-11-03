@@ -2,8 +2,8 @@
 <ExtensionObject Label="KPI Container"> 
 	<Dimension Label="Metric Name" Initial="Metric Name" />
 	
-	<Measurement Label="Responsible Party" Initial=""/>
 	<Measurement Label="Responsible Party Image" Initial=""/>
+	<Measurement Label="Responsible Party" Initial=""/>
 	<Measurement Label="Overall Score" Initial=""/>
 	<Measurement Label="Trend Change" Initial=""/>
 	<Measurement Label="Trend" Initial=""/>
