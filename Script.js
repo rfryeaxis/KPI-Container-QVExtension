@@ -14,12 +14,7 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 			var tableHeaders = ["Metric Name","","Responsible Party","Overall Score","","Trend Last 12 Months","Dynamic Dot","Synthesis"];
 			var tableFormatting = ["metricname","responsiblepartyimage","responsibleparty","overallscore","trendtext","trend","dynamicdot","synthesis"];
 			var imagePath = "/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Container/";
-			
-			_this.Data.SetPagesizeY(_this.Data.TotalSize.y);
-			_this.Data.SetPagesizeX(_this.Data.TotalSize.x);
-			
-			//_this.Element.innerHTML += '<img src="' + imagePath + 'jsmith.png"/>';
-
+									
 /*		
 			html += '<div style = ';
 			html += '"';
@@ -69,7 +64,23 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 			html += '"';
 			html += '>';
 	
-			html += '<table style = "width:100%;">';			
+			html += '<table style = "width:100%;">';	
+
+			test = _this.Data.Rows;
+			
+			test.sort(sortFunction);
+			
+			//http://stackoverflow.com/questions/16096872/how-to-sort-2-dimensional-array-by-column-value
+			//is there a way we can do this and sort by the numeric value for metric name? Or do we need to have a sort column?
+			//how to pass variable to sortFunction to tell it which column to sort by?
+			function sortFunction(a ,b) {
+				if (a[0].text === b[0].text) {
+					return 0;
+				}
+				else {
+					return (a[0].text < b[0].text) ? -1 : 1;
+				}
+			}
 			
 			//loop through rows
 			for (var row = 0; row < _this.Data.TotalSize.y; row++)
@@ -84,6 +95,7 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 						case 0:
 						{
 							html += '<td';
+							html += ' onclick="_this.Data.SearchColumn(0,_this.Data.Rows[' + row + '][' + col + '].text,true)"';
 							html += ' class = "' + tableFormatting[col] + '"';
 							html += '>';
 							html += _this.Data.Rows[row][col].text;
@@ -95,6 +107,7 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 						case 1:
 						{
 							html += '<td';
+							html += ' onclick="_this.Data.SearchColumn(0,_this.Data.Rows[' + row + '][' + 0 + '].text,true)"';
 							html += ' class = "' + tableFormatting[col] + '"';
 							html += '>';
 							var image = imagePath + _this.Data.Rows[row][col].text;
@@ -108,6 +121,7 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 						case 2:
 						{
 							html += '<td';
+							html += ' onclick="_this.Data.SearchColumn(0,_this.Data.Rows[' + row + '][' + 0 + '].text,true)"';
 							html += ' class = "' + tableFormatting[col] + '"';
 							html += '>';
 							html += _this.Data.Rows[row][col].text;
@@ -119,6 +133,7 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 						case 3:
 						{
 							html += '<td';
+							html += ' onclick="_this.Data.SearchColumn(0,_this.Data.Rows[' + row + '][' + 0 + '].text,true)"';
 							html += ' class = "' + tableFormatting[col] + '"';
 							html += ' id="overallscore_'+row+'"';
 							html += '>';
@@ -131,6 +146,7 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 						case 4:
 						{
 							html += '<td';
+							html += ' onclick="_this.Data.SearchColumn(0,_this.Data.Rows[' + row + '][' + 0 + '].text,true)"';
 							html += ' class = "' + tableFormatting[col] + '"';
 							//html += ' align = "right"';
 							html += '>';
@@ -143,6 +159,7 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 						case 5:
 						{
 							html += '<td';
+							html += ' onclick="_this.Data.SearchColumn(0,_this.Data.Rows[' + row + '][' + 0 + '].text,true)"';
 							html += ' class = "' + tableFormatting[col] + '"';
 							html += ' align = "left"';
 							html += ' id = "trend_' + row + '"';
@@ -158,6 +175,7 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 						case 6:
 						{
 							html += '<td';
+							html += ' onclick="_this.Data.SearchColumn(0,_this.Data.Rows[' + row + '][' + 0 + '].text,true)"';
 							html += ' class = "' + tableFormatting[col] + '"';
 							html += '>';
 							html += '<div id = "aster_'+row+'"';
@@ -170,6 +188,7 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 						case 7:
 						{
 							html += '<td';
+							html += ' onclick="_this.Data.SearchColumn(0,_this.Data.Rows[' + row + '][' + 0 + '].text,true)"';
 							html += ' class = "' + tableFormatting[col] + '"';
 							html += '>';
 							html += _this.Data.Rows[row][col].text;
@@ -214,7 +233,6 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 			}
 			
 			
-			
 			function drawLineChart(_this,divID,data)
 			{
 				//https://gist.github.com/benjchristensen/2579599				
@@ -234,27 +252,28 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 				// var y = d3.scale.linear().domain([0, d3.max(data)]).range([h, 0]);
 				// create a line function that can convert data[] into x and y points
 				var line = d3.svg.line()
-				// assign the X function to plot our line as we wish
-				.x(function(d,i) { 
-					// verbose logging to show what's actually being done
-					//('Plotting X value for data point: ' + d + ' using index: ' + i + ' to be at: ' + x(i) + ' using our xScale.');
-					// return the X coordinate where we want to plot this datapoint
-					return x(i); 
-				})
-				.y(function(d) { 
-					// verbose logging to show what's actually being done
-					//alert('Plotting Y value for data point: ' + d + ' to be at: ' + y(d) + " using our yScale.");
-					// return the Y coordinate where we want to plot this datapoint
-					return y(d); 
-				})
-				// Add an SVG element with the desired dimensions and margin.
-				var graph = d3.select(document.getElementById(divID)).append("svg:svg")
-						.attr("width", w)
-						.attr("height", h)
-					.append("svg:g")
-						//.attr("transform", "translate(" + m[0] + "," + h/2 + ")")
-						.attr("transform", "translate(" + m[0] + "," + m[1] + ")")
+					// assign the X function to plot our line as we wish
+					.x(function(d,i) {
+						// verbose logging to show what's actually being done
+						//('Plotting X value for data point: ' + d + ' using index: ' + i + ' to be at: ' + x(i) + ' using our xScale.');
+						// return the X coordinate where we want to plot this datapoint
+						return x(i); 
+					})
+					.y(function(d) {
+						// verbose logging to show what's actually being done
+						//alert('Plotting Y value for data point: ' + d + ' to be at: ' + y(d) + " using our yScale.");
+						// return the Y coordinate where we want to plot this datapoint
+						return y(d); 
+					})
+					// Add an SVG element with the desired dimensions and margin.
+					var graph = d3.select(document.getElementById(divID)).append("svg:svg")
+							.attr("width", w)
+							.attr("height", h)
+						.append("svg:g")
+							.attr("transform", "translate(" + m[0] + "," + m[1] + ")")
 				;
+							
+							
 				// create yAxis
 				//var xAxis = d3.svg.axis().scale(x).tickSize(-h).tickSubdivide(true);
 				// Add the x-axis.
@@ -270,13 +289,14 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 					  .attr("transform", "translate(-25,0)")
 					  .call(yAxisLeft)
 				;*/
-				
+								
 				// Add the line by appending an svg:path element with the data line we created above
 				// do this AFTER the axes above so that the line is above the tick-lines
 				graph.append("svg:path").attr("d", line(data))
 					.attr("fill","none")
 					.attr("stroke","#D3D3D3")
 				;
+								
 			}
 			
 			function drawOverallScore(_this,divID,value,total)
