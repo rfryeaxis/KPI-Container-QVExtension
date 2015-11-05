@@ -133,7 +133,7 @@ line.path.area {
 .trend
 {
 	text-align: left;
-	width: 10%;
+	width: 8%;
 }
 
 .trendtext
@@ -145,13 +145,13 @@ line.path.area {
 .dynamicdot
 {
 	text-align: center;
-	width:5%;
+	width:7%;
 }
 
 .synthesis
 {
 	text-align: left;
-	width:10%;
+	width:20%;
 }
 
 .header

@@ -38,8 +38,9 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 			//Create div
 			
 			//Populate HTML table
-			html += '<table style = "width:98%;" id = "headerTable">';
-			//html += '<table style = "width:100%;">';
+			var headerWidth = _this.GetWidth();
+			headerWidth = ((headerWidth-16)/headerWidth) * 100;
+			html += '<table style = "width:' + headerWidth + '%;" id = "headerTable">';
 			
 			//add headers
 			html += '<tr class = "header">';
@@ -52,8 +53,7 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 			html += '</tr>';
 			html += '</table>';
 			
-			var tableHeight = _this.GetHeight() - 20;// - headerTable.style.offsetHeight;
-//			alert(tableHeight);
+			var tableHeight = _this.GetHeight() - 30;
 		
 			html += '<div style = ';
 			html += '"';
@@ -64,11 +64,11 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 			html += '"';
 			html += '>';
 	
-			html += '<table style = "width:100%;">';	
+			html += '<table style = "width:100%;font-size:15px;">';	
 
-			test = _this.Data.Rows;
+			//test = _this.Data.Rows;
 			
-			test.sort(sortFunction);
+			//test.sort(sortFunction);
 			
 			//http://stackoverflow.com/questions/16096872/how-to-sort-2-dimensional-array-by-column-value
 			//is there a way we can do this and sort by the numeric value for metric name? Or do we need to have a sort column?
@@ -239,7 +239,7 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 				// define dimensions of graph
 				var m = [5, 5, 5, 5]; // margins
 				
-				var w = _this.GetWidth()*.2;//100;//1000 - m[1] - m[3]; // width
+				var w = _this.GetWidth() * .12;//100;//1000 - m[1] - m[3]; // width
 				var h = rowHeight;//400 - m[0] - m[2]; // height
 
 				// create a simple data array that we'll plot with a line (this array represents only the Y values, X will just be the index location)
@@ -265,15 +265,19 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 						// return the Y coordinate where we want to plot this datapoint
 						return y(d); 
 					})
-					// Add an SVG element with the desired dimensions and margin.
-					var graph = d3.select(document.getElementById(divID)).append("svg:svg")
+				;
+				
+				// Add an SVG element with the desired dimensions and margin.
+				var svg = d3.select(document.getElementById(divID)).append("svg:svg")
 							.attr("width", w)
 							.attr("height", h)
 						.append("svg:g")
 							.attr("transform", "translate(" + m[0] + "," + m[1] + ")")
 				;
-							
-							
+				
+				//var circle = d3.svg.circle()
+				
+				
 				// create yAxis
 				//var xAxis = d3.svg.axis().scale(x).tickSize(-h).tickSubdivide(true);
 				// Add the x-axis.
@@ -289,14 +293,73 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 					  .attr("transform", "translate(-25,0)")
 					  .call(yAxisLeft)
 				;*/
-								
+				
 				// Add the line by appending an svg:path element with the data line we created above
 				// do this AFTER the axes above so that the line is above the tick-lines
-				graph.append("svg:path").attr("d", line(data))
+				svg.append("svg:path").attr("d", line(data))
 					.attr("fill","none")
 					.attr("stroke","#D3D3D3")
 				;
 								
+				var circles = svg.selectAll("circle")
+						.data(data)
+					.enter()
+						.append("circle")
+						.attr("cx",
+							function(d,i)
+							{
+								return x(i);
+							}
+						)
+						.attr("cy",
+							function(d)
+							{
+								return y(d);
+							}
+						)
+						.attr("r",2.5)
+						.attr("fill",
+							function(d,i)
+							{
+								if(i == 0 || i == data.length-1)
+								{
+									if(d <= 3)
+									{
+										return "#CC3300";
+									}
+									else
+									{
+										if(d < 7)
+										{
+											return "#FFFF00";
+										}
+										else
+										{
+											
+											return "#99FF66";
+										}
+									}
+								}
+								else
+								{
+									return "none";
+								}
+							}
+						)
+						.attr("stroke",
+							function(d,i)
+							{
+								if(i == 0 || i == data.length-1)
+								{
+									return "black";
+								}
+								else
+								{
+									return "none";
+								}
+							}
+						)
+					;		
 			}
 			
 			function drawOverallScore(_this,divID,value,total)
@@ -319,9 +382,10 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 				}
 				else
 				{
-					if(value <=7)
+					if(value <7)
 					{
 						color = "#FFFF00";
+						
 					}
 					else
 					{
