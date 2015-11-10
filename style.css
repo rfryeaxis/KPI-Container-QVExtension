@@ -1,10 +1,3 @@
-.tableColumns
-{
-	margin-left:auto;
-	margin-right:auto;
-	
-}
-
 body{
 	font:10px sans-serif
 }
@@ -108,44 +101,44 @@ line.path.area {
 .metricname
 {
 	text-align: left;
-	width: 5%;
+	width: 10%;
+	
 }
 
 .responsiblepartyimage
 {
 	text-align: right;
-	width: 5%;
+	width: 1%;
 }
-
 
 .responsibleparty
 {
 	text-align: left;
-	width: 5%;
+	vertical-align:middle;
+	width: 13%;
 }
 
 .overallscore
 {
 	text-align: left;
-	width:10%;
+	width:13%;
 }
 
 .trend
 {
 	text-align: left;
-	width: 8%;
+	width: 10%;
 }
 
 .trendtext
 {
-	width: 1%;
 	align:right;
 }
 
 .dynamicdot
 {
 	text-align: center;
-	width:7%;
+	width:10%;
 }
 
 .synthesis

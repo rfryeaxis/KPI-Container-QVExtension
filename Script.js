@@ -11,8 +11,8 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 			var html = "";
 			var rowHeight = 50;
 			
-			var tableHeaders = ["Metric Name","","Responsible Party","Overall Score","","Trend Last 12 Months","Dynamic Dot","Synthesis"];
-			var tableFormatting = ["metricname","responsiblepartyimage","responsibleparty","overallscore","trendtext","trend","dynamicdot","synthesis"];
+			var tableHeaders = ["Metric Name","Responsible Party","Overall Score","Trend Last 12 Months","Dynamic Dot","Synthesis"];
+			var tableFormatting = ["metricname","responsibleparty","overallscore","trend","dynamicdot","synthesis"];
 			var imagePath = "/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Container/";
 									
 /*		
@@ -53,7 +53,7 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 			html += '</tr>';
 			html += '</table>';
 			
-			var tableHeight = _this.GetHeight() - 30;
+			var tableHeight = _this.GetHeight() - 15;
 		
 			html += '<div style = ';
 			html += '"';
@@ -64,7 +64,7 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 			html += '"';
 			html += '>';
 	
-			html += '<table style = "width:100%;font-size:15px;">';	
+			html += '<table style = "width:100%;font-size:13px;">';	
 
 			//test = _this.Data.Rows;
 			
@@ -87,7 +87,8 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 			{
 				html += '<tr class = "row">';
 				//Loop through columns
-				for (var col = 0; col < _this.Data.TotalSize.x; col++)
+				//for (var col = 0; col < _this.Data.TotalSize.x; col++)
+				for (var col = 0; col < tableHeaders.length; col++)
 				{
 					switch(col)
 					{
@@ -98,39 +99,35 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 							html += ' onclick="_this.Data.SearchColumn(0,_this.Data.Rows[' + row + '][' + col + '].text,true)"';
 							html += ' class = "' + tableFormatting[col] + '"';
 							html += '>';
+							
 							html += _this.Data.Rows[row][col].text;
+							
 							html += '</td>';
 							
 							break;
 						}
-						//Responsible Party Image
+						//Responsible Party
 						case 1:
 						{
 							html += '<td';
 							html += ' onclick="_this.Data.SearchColumn(0,_this.Data.Rows[' + row + '][' + 0 + '].text,true)"';
 							html += ' class = "' + tableFormatting[col] + '"';
+							html += ' style = "height:"' + rowHeight + ';"';
 							html += '>';
-							var image = imagePath + _this.Data.Rows[row][col].text;
-							html += '<img src="' + image + '"/>';
-							html += '</td>';
 							
-							//alert(imagePath + _this.Data.Rows[row][col].text);
-							break;
-						}
-						//Responsible Party
-						case 2:
-						{
-							html += '<td';
-							html += ' onclick="_this.Data.SearchColumn(0,_this.Data.Rows[' + row + '][' + 0 + '].text,true)"';
-							html += ' class = "' + tableFormatting[col] + '"';
-							html += '>';
+							html += '<div style = "float:left;width:32px;margin-top:5px;">';
+							var image = '"/QvAjaxZfc/QvsViewClient.aspx?datamode=binary&amp;name=qmem://RP Name/' + _this.Data.Rows[row][col].text + '&amp;host=QVS%40win12qlikserv&amp;slot=&amp;stamp=0&amp;view=Test%20Extensions%2Ftest%20Extensions.qvw"';
+							html += '<img  src=' + image + '/>';
+							html += '</div>';
+							
+							html += '<div style = "margin-left:32px;margin-top:12px;">';
 							html += _this.Data.Rows[row][col].text;
-							
+							html += '</div>';
 							html += '</td>';
 							break;
 						}
 						//Overall Score
-						case 3:
+						case 2:
 						{
 							html += '<td';
 							html += ' onclick="_this.Data.SearchColumn(0,_this.Data.Rows[' + row + '][' + 0 + '].text,true)"';
@@ -142,37 +139,29 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 							html += '</td>';
 							break;
 						}
-						//Trend Change
-						case 4:
-						{
-							html += '<td';
-							html += ' onclick="_this.Data.SearchColumn(0,_this.Data.Rows[' + row + '][' + 0 + '].text,true)"';
-							html += ' class = "' + tableFormatting[col] + '"';
-							//html += ' align = "right"';
-							html += '>';
-							html += _this.Data.Rows[row][col].text;
-							
-							html += '</td>';
-							break;
-						}
 						//Trend
-						case 5:
+						case 3:
 						{
 							html += '<td';
 							html += ' onclick="_this.Data.SearchColumn(0,_this.Data.Rows[' + row + '][' + 0 + '].text,true)"';
 							html += ' class = "' + tableFormatting[col] + '"';
-							html += ' align = "left"';
-							html += ' id = "trend_' + row + '"';
+							html += ' align = "left" style = "padding-top:0px;padding-bottom:0px;"';
 							html += '>';
-							html += '<div>';
-							//html += _this.Data.Rows[row][col].text;
+							html += '<div style = "float:left;margin-top:' + (rowHeight/2 - 5) + 'px;">';
+							html += _this.Data.Rows[row][4].text;
+							html += '</div>';
+							
+							html += '<div style = "margin-left:13px;"';
+							html += 'id = "trend_' + row + '"';
+							html += '>';
+														
 							html += '</div>';
 							
 							html += '</td>';
 							break;
 						}
 						//Dynamic Dot Config
-						case 6:
+						case 4:
 						{
 							html += '<td';
 							html += ' onclick="_this.Data.SearchColumn(0,_this.Data.Rows[' + row + '][' + 0 + '].text,true)"';
@@ -185,13 +174,13 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 							break;
 						}
 						//Synthesis
-						case 7:
+						case 5:
 						{
 							html += '<td';
 							html += ' onclick="_this.Data.SearchColumn(0,_this.Data.Rows[' + row + '][' + 0 + '].text,true)"';
 							html += ' class = "' + tableFormatting[col] + '"';
 							html += '>';
-							html += _this.Data.Rows[row][col].text;
+							html += _this.Data.Rows[row][7].text;
 							
 							html += '</td>';
 							break;
@@ -237,10 +226,10 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 			{
 				//https://gist.github.com/benjchristensen/2579599				
 				// define dimensions of graph
-				var m = [5, 5, 5, 5]; // margins
+				var m = [5, 0, 5, 5]; // margins
 				
-				var w = _this.GetWidth() * .12;//100;//1000 - m[1] - m[3]; // width
-				var h = rowHeight;//400 - m[0] - m[2]; // height
+				var w = 100;//(_this.GetWidth() - m[1] - m[3]);
+				var h = rowHeight;// - m[0] - m[2];
 
 				// create a simple data array that we'll plot with a line (this array represents only the Y values, X will just be the index location)
 				//data = [3, 6, 2, 7, 5, 2, 0, 3, 8, 9, 2, 5, 9, 3, 6, 3, 6, 2, 7, 5, 2, 1, 3, 8, 9, 2, 5, 9, 2, 7];
@@ -265,6 +254,10 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 						// return the Y coordinate where we want to plot this datapoint
 						return y(d); 
 					})
+					//smooth curves
+					//.interpolate("basis")
+					//jagged curves
+					.interpolate("linear")
 				;
 				
 				// Add an SVG element with the desired dimensions and margin.
@@ -275,30 +268,44 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 							.attr("transform", "translate(" + m[0] + "," + m[1] + ")")
 				;
 				
-				//var circle = d3.svg.circle()
-				
-				
+				var target = d3.svg.line()
+					// assign the X function to plot our line as we wish
+					.x(function(d,i) {
+						// verbose logging to show what's actually being done
+						//('Plotting X value for data point: ' + d + ' using index: ' + i + ' to be at: ' + x(i) + ' using our xScale.');
+						// return the X coordinate where we want to plot this datapoint
+						return x(i); 
+					})
+					.y(7)
+				;
+								
 				// create yAxis
 				//var xAxis = d3.svg.axis().scale(x).tickSize(-h).tickSubdivide(true);
 				// Add the x-axis.
-				/*graph.append("svg:g")
+				/*svg.append("svg:g")
 					  .attr("class", "x axis")
 					  .attr("transform", "translate(0," + h + ")")
 					  .call(xAxis);*/
 				// create left yAxis
 				//var yAxisLeft = d3.svg.axis().scale(y).ticks(4).orient("left");
 				// Add the y-axis to the left
-				/*graph.append("svg:g")
+				/*
+				svg.append("svg:g")
 					  .attr("class", "y axis")
 					  .attr("transform", "translate(-25,0)")
 					  .call(yAxisLeft)
 				;*/
+				svg.append("svg:path").attr("d", target(data))
+					.attr("fill","none")
+					.attr("stroke","#d3d3d3")
+					.style("stroke-dasharray",("5,5"))
+				;
 				
 				// Add the line by appending an svg:path element with the data line we created above
 				// do this AFTER the axes above so that the line is above the tick-lines
 				svg.append("svg:path").attr("d", line(data))
 					.attr("fill","none")
-					.attr("stroke","#D3D3D3")
+					.attr("stroke","#7e7e7e")
 				;
 								
 				var circles = svg.selectAll("circle")
@@ -365,8 +372,15 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 			function drawOverallScore(_this,divID,value,total)
 			{
 				//alert(document.getElementById(divID).style.width);
-				var width = _this.GetWidth * .15;//_this.GetWidth();// - margin.left - margin.right;//960 - margin.left - margin.right,
-				var height = rowHeight;//_this.GetHeight();// - margin.top - margin.bottom;//500 - margin.top - margin.bottom;
+				//var width = _this.GetWidth() * .15;//_this.GetWidth();// - margin.left - margin.right;//960 - margin.left - margin.right,
+				//var height = rowHeight;//_this.GetHeight();// - margin.top - margin.bottom;//500 - margin.top - margin.bottom;
+				
+				// define dimensions of graph
+				var m = [5, 5, 5, 5]; // margins
+				
+				var width = (_this.GetWidth() - m[1] - m[3]) * .15;
+				var height = rowHeight - m[0] - m[2];
+				var radius = 5;//width/10/2;
 				
 				var svg = d3.select(document.getElementById(divID)).append("svg")
 					.attr("width",width)
@@ -395,11 +409,11 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 				
 				for(var i = 0; i < value; i ++)
 				{
-					var cx = 5 + i*11;
+					var cx = radius + i*11;
 					var circle = svg.append("circle")
 						.attr("cx",cx)
 						.attr("cy",height/2)
-						.attr("r",5)
+						.attr("r",radius)
 						.attr("fill",color)
 						.attr("stroke","black")
 						
@@ -408,11 +422,11 @@ Qva.LoadScript("/QvAjaxZfc/QvsViewClient.aspx?public=only&name=Extensions/KPI Co
 				
 				for(var i = lastFilledDot+1; i < total; i ++)
 				{
-					var cx = 5 + i*11;
+					var cx = radius + i*11;
 					var circle = svg.append("circle")
 						.attr("cx",cx)
 						.attr("cy",height/2)
-						.attr("r",5)
+						.attr("r",radius)
 						.attr("fill","none")
 						.attr("stroke","black")
 						;
